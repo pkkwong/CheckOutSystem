@@ -3,6 +3,7 @@ package checkoutSystem;
 /**
  * @author Peter.Wong
  * @version 1.0 - solution for exercise, step 1: Shopping Cart
+ *          2.0 - solution for step 2
  * 
  * Main program to initialise different shopping lists to test the class for 
  * adding shopping lists in a checkout system.
@@ -18,10 +19,13 @@ public class RunCheckOut {
 		"orange, apple, ORange, ApplE, ORANGE, banana",
 		"",
 		"orange, apple, ORange, ApplE,, apple",
-		"orange, apple, ORange, ApplE, ORANGE,apple, apple,apple"};
+		"orange, apple, ORange, ApplE, ORANGE,apple, apple,apple",
+		"orange, orange, ORange, ApplE, ORANGE,apple, apple,apple,ORange,ORange,ORange,apple"};
 		
 		CheckOut calc = new CheckOut();
 		double total;
+		
+		calc.setSpecialOffer(true); // set special offer on
 		
 		for ( int i = 0; i < shoppingLists.length; i++) {
 			total = calc.addItemListPrices(shoppingLists[i]);

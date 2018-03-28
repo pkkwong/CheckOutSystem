@@ -2,7 +2,9 @@ package checkoutSystem;
 
 /**
  * @author Peter.Wong
- * @version 1.0
+ * @version 1.0 - solution for exercise, step 1: Shopping Cart
+ *          2.0 - solution for step 2
+ *          
  * 
  * A class to define a simple check out system where only 2 items are valid to be sold, orange and apple.
  * The price for each item is hard coded for this exercise to keep it quick and simple.
@@ -12,9 +14,11 @@ public class CheckOut {
 	
 	private static String[] saleItemName = {"apple", "orange"}; //all item names in lowercase
 	private static double[] saleItemPrice = {0.60, 0.25};
+	private static int[] saleItemCount = {0, 0};
 	private static String csvDelimeter = ",";
 	private static String[] fields;
 	private static int nbrItemsInList;
+	private static boolean specialOffer = false;
 
 	
 	/**
@@ -32,15 +36,24 @@ public class CheckOut {
 			return total;
 		}
 		
-
+		for (int i=0; i < saleItemName.length; i++) {
+			saleItemCount[i] = 0;
+		}
+		
 		for ( String itemName : fields) {
 			for ( int i = 0; i < saleItemName.length; i++) {
 				String s = itemName.toLowerCase().trim();
 				if (s.equals(saleItemName[i])) {
 					total = total + saleItemPrice[i];
+					saleItemCount[i] ++;
 				}
 			}
 		}
+		//if special offer is on then reprice the total to pay.
+		if (getSpecialOffer()) {
+			total = applySpecialOffers();
+		}
+		
 		return total;
 	}
 	
@@ -81,7 +94,48 @@ public class CheckOut {
 
 		return result;
 	}
-
+	/**
+	 * @return total amount after applying the special offers.
+	 * 
+	 * we can create different methods for different offers.
+	 */
+	public double applySpecialOffers(){
+		double total = 0.0;
+		//special offer apples buy one get one free, oranges 3 for 2.
+		
+		total = buyOneGetOneFreeOffer(saleItemCount[0], saleItemPrice[0]);
+		total = total + threeForTwofOffer(saleItemCount[1], saleItemPrice[1]);	
+		return total;
+	}
+	/**
+	 * Making these methods so that we can apply the offers on any item
+	 * @param count - input the number of the same items
+	 * @param price - inout price for one item
+	 * @return total amount for buy one get one free 
+	 */
+	public double buyOneGetOneFreeOffer( int count, double price){
+		double total = 0.0;
+		int i = (count/2) + count % 2;
+		total = i * price;
+		return total;	
+	}
+		
+	
+	/**
+	 * Making these methods so that we can apply the offers on any item
+	 * @param count - input the number of the same items
+	 * @param pricep - input price for one item
+	 * @return total amount for 3 for the price of 2
+	 */
+	public double threeForTwofOffer( int count, double price){
+		double total = 0.0;
+		int i = (count/3);
+		total = i * 2 * price; // each 3 items is priced as 2 items
+		
+		total = total + (count % 3) * price; //add price for remainder of items
+		return total;	
+	}
+		
 	/**
 	 * @param n int - the number of items in shopping list to set
 	 */
@@ -96,4 +150,20 @@ public class CheckOut {
 		return nbrItemsInList;
 		
 	}
+	
+	/**
+	 * @param b boolean - T or F input to set the flag specialOffer
+	 */
+	public static void setSpecialOffer( boolean b) {
+		specialOffer = b;
+	}
+	
+	/**
+	 * @return boolean - T or F for specialOffer is on or off
+	 */
+	public boolean getSpecialOffer() {
+		return specialOffer;
+		
+	}
+	
 }
